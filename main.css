@@ -1,0 +1,149 @@
+.home-header .phone{
+  position:absolute;
+  background:#111;
+  border-radius:55px;
+  box-shadow:0 0 0 2px #aaa;
+  top:50%;
+  left:40px;
+  width:320px;
+  height:568px;
+  padding:105px 25px;
+  transform:translateY(-50%)
+  }
+@media(max-width:960px){
+  .home-header
+  .phone{right:5px}}
+
+.home-header .phone:after{
+  content:'';
+  position:absolute;
+  width:60px;
+  height:60px;
+  left:50%;
+  margin-left:-30px;
+  bottom:20px;
+  border-radius:100%;
+  box-sizing:border-box;
+  border:5px solid #333
+  }
+
+.home-header .phone:before{
+  content:'';
+  width:60px;
+  height:10px;
+  border-radius:10px;
+  position:absolute;
+  left:50%;
+  margin-left:-30px;
+  background:#333;
+  top:50px
+  }
+  .home-header .phone .statusbar{
+    position:absolute;
+    width:320px;
+    height:20px;
+    background:url(img/status-bar.png);
+    left:50%;
+    margin-left:-160px;
+    top:100px;
+    -webkit-background-size:100% auto;
+    background-size:100% auto
+    }
+
+  .home-header .phone iframe{
+    width:320px;height:548px;display:block;width:100%;margin-top:20px
+    }
+
+  .home-header .phone.phone-android{
+    border-radius:30px;width:360px;padding:60px 10px;height:640px
+    }
+
+  .home-header .phone.phone-android .theme-switch{
+    margin-top:-9px
+    }
+
+  .home-header .phone.phone-android:before{
+    width:14px;height:14px;
+    border-radius:50%;position:absolute;
+    left:50%;margin-left:-7px;background:#666;top:25px
+    }
+
+  .home-header .phone.phone-android:after{
+    content:'';width:8px;height:8px;
+    border-radius:50%;position:absolute;
+    left:50px;background:#444;top:30px;margin-left:0
+    }
+
+  .home-header .phone.phone-android iframe{
+    width:360px;height:615px;margin-top:25px;border-radius:12px
+    }
+
+  .home-header .phone.phone-android .statusbar{
+    width:360px;height:25px;
+    background-image:url(img/status-bar-android.png);
+    margin-left:-180px;top:60px}
+
+  .home-header .phone .theme-switch{
+    position:absolute;right:100%;margin-right:2px;top:70px;white-space:nowrap
+    }
+
+  .home-header .phone .theme-switch a{
+    text-align:center;background:#b72f20;
+    text-decoration:none;color:#fff;
+    padding:5px 5px 5px 20px;
+    border-radius:35px 0 0 35px;
+    display:block;font-size:12px;
+    transition:200ms;opacity:.5;
+    background:rgba(0,0,0,.3);position:relative
+    }
+
+  .home-header .phone .theme-switch a span{
+    display:block
+    }
+
+  .home-header .phone .theme-switch a.active,.home-header .phone .theme-switch a:hover{
+    opacity:1
+    }
+
+  .home-header .phone .theme-switch a+a{
+    margin-top:10px
+    }
+
+  .home-header .phone .theme-switch a.active:hover .theme-icon{
+    opacity:0
+    }
+
+  .home-header .phone .theme-switch a.active:hover .fullscreen{
+    opacity:1
+    }
+
+  .home-header .phone .theme-switch .theme-icon,.home-header .phone .theme-switch .fullscreen{
+    transition:100ms
+    }
+
+  .home-header .phone .theme-switch .fullscreen{
+    position:absolute;right:0;top:0;width:58px;
+    height:100%;box-sizing:border-box;
+    padding:15px 5px 5px 20px;font-size:10px;line-height:1;opacity:0
+    }
+
+  .home-header .phone .theme-switch .fullscreen i{
+    width:30px;height:30px;
+    display:block;margin-left:auto;
+    margin-right:auto;
+    background-image:url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48cGF0aCBkPSJNMy4yMDUgMjguNzk1aDEwLjY2MlYxOC4xMzFIMy4yMDV2MTAuNjY0ek00LjI3MSAxOS4xOThoOC41M3Y4LjUzMWgtOC41M3YtOC41MzF6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTIzLjQ2NCAxNmgxLjA2NnYtOC41M2gtOC41M3YxLjA2Nmg2Ljc2MmwtNy44OCA3Ljg4Ljc1NC43NTQgNy44MjgtNy44Mjh6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTMuMjA1IDMuMjA1VjE2aDEuMDY2di0xMS43MjloMjMuNDU3djIzLjQ1N2gtMTEuNzI5djEuMDY2aDEyLjc5NXYtMjUuNTl6IiBmaWxsPSIjZmZmIi8+PC9zdmc+);
+    background-size:24px 24px;background-position:center;background-repeat:no-repeat
+    }
+
+  .home-header .phone .theme-switch .logo-apple,.home-header .phone .theme-switch .logo-android{
+    width:30px;height:30px;
+    margin-left:auto;margin-right:auto;
+    background-size:100% 100%;background-position:center;
+    background-repeat:no-repeat;margin-bottom:3px
+    }
+
+  .home-header .phone .theme-switch .logo-apple{
+    background-image:url(img/logo-apple.png)}
+
+  .home-header .phone  .theme-switch .logo-android{
+    background-image:url(img/logo-android.png)}

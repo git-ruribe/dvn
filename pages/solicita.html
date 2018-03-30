@@ -1,0 +1,145 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only"></span>
+          </a>
+        </div>
+        <div class="title">Leer de Server
+        </div>
+      </div>
+    </div>
+    <div class="page-content login-screen-content">
+      <a id="btnAct" href="#" class="item-link list-button" @click="actualiza"></a>
+      <form>
+        <div class="list">
+          <ul>
+
+             <div  id="textoX"></div>
+             <li></li>
+            <li><a href="#" class="item-link list-button" @click="graba">Solicitar</a></li>
+          </ul>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+<script>
+
+  return {
+    on: {
+      pageInit: function () {
+        var self = this;
+        var app = self.$app;
+        var $ = self.$;
+
+        app.request({url:'https://api.jotform.com/form/80863838494876/questions?apikey=f04baed480c32f3fbcf99b5fc87cad97', method: 'GET', crossDomain: true,
+        success: function (data, status, xhr) {
+
+            var json_obj = JSON.parse(xhr.responseText).content;//parse JSON
+            var opciones ="{}";
+
+            for (var i in json_obj)
+            {
+                if (json_obj[i].text == 'Solicita') {
+                  opciones = json_obj[i].options.split('|');
+                  campoSolicita = json_obj[i].qid;
+
+                }
+                if (json_obj[i].text == 'Email') {
+                  campoEmail = json_obj[i].qid;
+
+                }
+            }
+
+            var output="";
+            for (var i in opciones)
+            {
+                output+="<li><label class='item-checkbox item-content'>";
+                output+="<input type='checkbox' name='opciones' value='" + opciones[i]  + "' onclick='escoge(this)' >";
+                output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + opciones[i]  + "</div></div></label></li>"
+            }
+
+
+            $('#textoX').html(output);
+
+        },
+        error: function (data) {alert("Error :" + data.responseText);},
+        });
+
+      }
+    },
+    methods: {
+      graba: function () {
+        var $ = this.$;
+        var app = this.$app;
+        var router = this.$router;
+
+        datos = {};
+        datoEmail = 'submission['+campoEmail+']';
+        datoSolcita = 'submission['+campoSolicita+']';
+        datos[datoEmail] = "testZ@esd.mx";
+        datos[datoSolcita] = array;
+
+        app.request({url:'https://api.jotform.com/form/80863838494876/submissions?apikey=f04baed480c32f3fbcf99b5fc87cad97', method: 'POST', crossDomain: true,
+        data:datos,
+        success: function (data, status, xhr){
+          //alert("OK :" + xhr.responseText);
+          app.dialog.alert('Solicitud enviada', 'Gracias', function () {
+                    router.back();
+                });
+          //router.back();
+          //$('#btnAct').trigger('click');
+        },
+        error: function (data) {
+          alert("Error :" + data.responseText);
+        },
+        });
+      },
+      actualiza: function () {
+        var $ = this.$;
+        var app = this.$app;
+        var router = this.$router;
+
+        app.request({url:'https://api.jotform.com/form/80863838494876/questions?apikey=f04baed480c32f3fbcf99b5fc87cad97', method: 'GET', crossDomain: true,
+        success: function (data, status, xhr) {
+
+            var json_obj = JSON.parse(xhr.responseText).content;//parse JSON
+            var opciones ="{}";
+
+            for (var i in json_obj)
+            {
+                if (json_obj[i].text == 'Solicita') {
+                  opciones = json_obj[i].options.split('|');
+                  campoSolicita = json_obj[i].qid;
+
+                }
+                if (json_obj[i].text == 'Email') {
+                  campoEmail = json_obj[i].qid;
+
+                }
+            }
+
+            var output="";
+            for (var i in opciones)
+            {
+                output+="<li><label class='item-checkbox item-content'>";
+                output+="<input type='checkbox' name='opciones' value='" + opciones[i]  + "' onclick='escoge(this)' >";
+                output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + opciones[i]  + "</div></div></label></li>"
+            }
+
+
+            $('#textoX').html(output);
+
+        },
+        error: function (data) {alert("Error :" + data.responseText);},
+        });
+
+      }
+
+    }
+  }
+</script>

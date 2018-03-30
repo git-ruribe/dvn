@@ -1,0 +1,35 @@
+.demo-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.demo-swiper .swiper-slide {
+  font-size: 25px;
+  font-weight: 300;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  background: #fff;
+  color: #000;
+}
+
+.demo-swiper-cube {
+  width: 90%;
+  height: 90%;
+  top: 5%;
+}
+
+.demo-swiper-cube .swiper-slide {
+  background-size: cover;
+  color: #fff;
+  -webkit-backface-visibility: hidden;
+}

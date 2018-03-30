@@ -1,0 +1,309 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title" >Productos<span class="subtitle" id="titulo">Subtitle</span></div>
+
+      </div>
+    </div>
+    <div class="page-content">
+
+      <div class="list no-hairlines-md">
+        <ul>
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">Producto</div>
+              <div class="item-input-wrap">
+                <input type="text" placeholder="Escriba para autocompletar" id="autocomplete-dropdown-ajax"/>
+                <span class="input-clear-button" onclick='qqq(this)'></span>
+              </div>
+            </div>
+          </li>
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">División</div>
+              <div class="item-input-wrap">
+                <input type="text" value="*" id="division" />
+              </div>
+            </div>
+          </li>
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">Especie</div>
+              <div class="item-input-wrap">
+                <input type="text" value="*" id="especie"/>
+              </div>
+            </div>
+          </li>
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">Tipo</div>
+              <div class="item-input-wrap">
+                <input type="text" value="*" id="tipo"/>
+              </div>
+            </div>
+          </li>
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">Marca</div>
+              <div class="item-input-wrap">
+                <input type="text" value="*" id="marca"/>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    data: function () {
+      return {
+        datos : {}
+      };
+    },
+    on: {
+      pageBeforeRemove() {
+        var self = this;
+        // Destroy all autocompletes
+        self.autocompleteDropdownAjax.destroy();
+      },
+      pageInit: function () {
+        var self = this;
+        var app = self.$app;
+
+        var $ = self.$;
+        var marca =['*'];
+        var tipo =['*'];
+        var especie =['*'];
+        var division =['*'];
+        var cuantos = 0;
+
+        app.request({
+          url: 'https://dvn-app.firebaseio.com/productos.json',
+          method: 'GET',
+          dataType: 'json',
+          //send "query" to server. Useful in case you generate response dynamically,
+          success: function (data) {
+          datos = data;
+          cuantos = data.length;
+          $('#titulo').text("(" +cuantos + ")");
+
+          division_temp ={};
+          especie_temp ={};
+          tipo_temp ={};
+          marca_temp ={};
+
+          // Store each of the elements in an object keyed of of the name field.  If there is a collision (the name already exists) then it is just replaced with the most recent one.
+          for (var i = 0; i < data.length; i++) {
+              division_temp[data[i].division] = data[i].division;
+              especie_temp[data[i].especie] = data[i].especie;
+              tipo_temp[data[i].tipo] = data[i].tipo;
+              marca_temp[data[i].marca] = data[i].marca;
+              data[i].cuenta = 1;
+            }
+            // Push each of the values back into the array.
+          for (var o in division_temp) {
+              division.push(division_temp[o]);
+            }
+          for (var o in especie_temp) {
+              especie.push(especie_temp[o]);
+            }
+          for (var o in tipo_temp) {
+              tipo.push(tipo_temp[o]);
+            }
+          for (var o in marca_temp) {
+              marca.push(marca_temp[o]);
+            }
+
+            var pickerDevicedivision = app.picker.create({
+              inputEl: '#division',
+              cols: [
+                {
+                  textAlign: 'center',
+                  values: division
+                }
+              ],
+              on: {
+                change: function () {
+                  cuantos = 0;
+
+                  for (var i = 0; i < data.length; i++) {
+                    data[i].cuenta = 0;
+                    if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
+                         ((data[i].tipo == pickerDeviceTipo.value) || (pickerDeviceTipo.value=="*") || (pickerDeviceTipo.value==undefined)) &&
+                         ((data[i].especie == pickerDeviceEspecie.value) || (pickerDeviceEspecie.value=="*") || (pickerDeviceEspecie.value==undefined)) &&
+                         ((data[i].marca == pickerDeviceMarca.value) || (pickerDeviceMarca.value=="*") || (pickerDeviceMarca.value==undefined))
+                       ) {
+                    data[i].cuenta = 1;
+                    cuantos += 1;
+                    }
+                  }
+                    $('#titulo').text("(" +cuantos + ")");
+                    $('#autocomplete-dropdown-ajax').val("");
+
+                }
+              }
+            });
+
+            var pickerDeviceEspecie = app.picker.create({
+              inputEl: '#especie',
+              cols: [
+                {
+                  textAlign: 'center',
+                  values: especie
+                }
+              ],
+              on: {
+                change: function () {
+                  cuantos = 0;
+
+                  for (var i = 0; i < data.length; i++) {
+                    data[i].cuenta = 0;
+                    if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
+                         ((data[i].tipo == pickerDeviceTipo.value) || (pickerDeviceTipo.value=="*") || (pickerDeviceTipo.value==undefined)) &&
+                         ((data[i].especie == pickerDeviceEspecie.value) || (pickerDeviceEspecie.value=="*") || (pickerDeviceEspecie.value==undefined)) &&
+                         ((data[i].marca == pickerDeviceMarca.value) || (pickerDeviceMarca.value=="*") || (pickerDeviceMarca.value==undefined))
+                       ) {
+                    data[i].cuenta = 1;
+                    cuantos += 1;
+                    }
+                  }
+                    $('#titulo').text("(" +cuantos + ")");
+                    $('#autocomplete-dropdown-ajax').val("");
+
+                }
+              }
+            });
+
+            var pickerDeviceMarca = app.picker.create({
+              inputEl: '#marca',
+              cols: [
+                {
+                  textAlign: 'center',
+                  values: marca
+                }
+              ],
+              on: {
+                change: function () {
+                  cuantos = 0;
+
+                  for (var i = 0; i < data.length; i++) {
+                    data[i].cuenta = 0;
+                    if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
+                         ((data[i].tipo == pickerDeviceTipo.value) || (pickerDeviceTipo.value=="*") || (pickerDeviceTipo.value==undefined)) &&
+                         ((data[i].especie == pickerDeviceEspecie.value) || (pickerDeviceEspecie.value=="*") || (pickerDeviceEspecie.value==undefined)) &&
+                         ((data[i].marca == pickerDeviceMarca.value) || (pickerDeviceMarca.value=="*") || (pickerDeviceMarca.value==undefined))
+                       ) {
+                    data[i].cuenta = 1;
+                    cuantos += 1;
+                    }
+                  }
+                    $('#titulo').text("(" +cuantos + ")");
+                    $('#autocomplete-dropdown-ajax').val("");
+
+                }
+              }
+            });
+
+            var pickerDeviceTipo = app.picker.create({
+              inputEl: '#tipo',
+              cols: [
+                {
+                  textAlign: 'center',
+                  values: tipo
+                }
+              ],
+              on: {
+                change: function () {
+                  cuantos = 0;
+
+                  for (var i = 0; i < data.length; i++) {
+                    data[i].cuenta = 0;
+                    if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
+                         ((data[i].tipo == pickerDeviceTipo.value) || (pickerDeviceTipo.value=="*") || (pickerDeviceTipo.value==undefined)) &&
+                         ((data[i].especie == pickerDeviceEspecie.value) || (pickerDeviceEspecie.value=="*") || (pickerDeviceEspecie.value==undefined)) &&
+                         ((data[i].marca == pickerDeviceMarca.value) || (pickerDeviceMarca.value=="*") || (pickerDeviceMarca.value==undefined))
+                       ) {
+                    data[i].cuenta = 1;
+                    cuantos += 1;
+                    }
+                  }
+                    $('#titulo').text("(" +cuantos + ")");
+                    $('#autocomplete-dropdown-ajax').val("");
+
+                }
+              }
+            });
+
+            // Dropdown with ajax data
+            self.autocompleteDropdownAjax = app.autocomplete.create({
+              inputEl: '#autocomplete-dropdown-ajax',
+              openIn: 'dropdown',
+              preloader: true, //enable preloader
+              /* If we set valueProperty to "id" then input value on select will be set according to this property */
+              valueProperty: 'nombre', //object's "value" property name
+              textProperty: 'nombre', //object's "text" property name
+              limit: 50, //limit to 20 results
+              dropdownPlaceholderText: '...',
+              source: function (query, render) {
+                var autocomplete = this;
+                var results = [];
+                if (query.length === 0) {
+                  for (var i = 0; i < datos.length; i++) {
+                    if (datos[i].cuenta==1) results.push(datos[i]);
+                  }
+                  render(results);
+                  return;
+                  }
+                    // Find matched items, lo hice doble para que muestre primero los valores que empiezan con la busqueda
+                    for (var i = 0; i < datos.length; i++) {
+                      if ((datos[i].nombre.toLowerCase().indexOf(query.toLowerCase()) === 0) && (datos[i].cuenta)==1) results.push(datos[i]);
+                    }
+                    for (var i = 0; i < datos.length; i++) {
+                      if ((datos[i].nombre.toLowerCase().indexOf(query.toLowerCase()) >= 1) && (datos[i].cuenta)==1) results.push(datos[i]);
+                    }
+                    render(results);
+                },
+                on: {
+                  change: function () {
+                    cuantos = 0;
+                    for (var i = 0; i < datos.length; i++) {
+                      data[i].cuenta = 0;
+                      if ($('#autocomplete-dropdown-ajax').val()===datos[i].nombre) {
+                        $('#division').val(datos[i].division);
+                        pickerDevicedivision.value=datos[i].division;
+                        $('#especie').val(datos[i].especie);
+                        pickerDeviceEspecie.value=datos[i].especie;
+                        $('#tipo').val(datos[i].tipo);
+                        pickerDeviceTipo.value=datos[i].tipo;
+                        $('#marca').val(datos[i].marca);
+                        pickerDeviceMarca.value=datos[i].marca;
+                        data[i].cuenta = 1;
+                        cuantos +=1;
+                      }
+                    }
+                    $('#titulo').text("(" +cuantos + ")");
+                  }
+                }
+            });
+
+          }
+        });
+
+
+
+
+
+      }
+    }
+  }
+</script>
