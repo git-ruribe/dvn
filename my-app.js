@@ -48,6 +48,8 @@ var mainView = app.views.create('.view-main', {
 })
 
 var datos = {};
+
+/*
 var array = [];
 var campoEmail = 3;
 var campoSolicita = 4;
@@ -58,7 +60,9 @@ function escoge(myRadio) {
   for (var i = 0; i < checkboxes.length; i++) {
     array.push(checkboxes[i].value)
   }
+  console.log("pelos");
 }
+*/
 
 function qqq(pelos) {
   division = document.getElementById("division").value;

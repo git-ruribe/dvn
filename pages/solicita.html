@@ -8,7 +8,7 @@
             <span class="ios-only"></span>
           </a>
         </div>
-        <div class="title">Leer de Server
+        <div class="title">Solicitar
         </div>
       </div>
     </div>
@@ -36,31 +36,20 @@
         var app = self.$app;
         var $ = self.$;
 
-        app.request({url:'https://api.jotform.com/form/80863838494876/questions?apikey=f04baed480c32f3fbcf99b5fc87cad97', method: 'GET', crossDomain: true,
-        success: function (data, status, xhr) {
+        app.request({
+            url: 'https://dvn-app.firebaseio.com/servicios.json',
+            method: 'GET',
+            dataType: 'json',
+            success: function (datos) {
 
-            var json_obj = JSON.parse(xhr.responseText).content;//parse JSON
-            var opciones ="{}";
-
-            for (var i in json_obj)
-            {
-                if (json_obj[i].text == 'Solicita') {
-                  opciones = json_obj[i].options.split('|');
-                  campoSolicita = json_obj[i].qid;
-
-                }
-                if (json_obj[i].text == 'Email') {
-                  campoEmail = json_obj[i].qid;
-
-                }
-            }
+            console.log(datos[0].servicio);
 
             var output="";
-            for (var i in opciones)
+            for (var i = 0; i < datos.length; i++)
             {
                 output+="<li><label class='item-checkbox item-content'>";
-                output+="<input type='checkbox' name='opciones' value='" + opciones[i]  + "' onclick='escoge(this)' >";
-                output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + opciones[i]  + "</div></div></label></li>"
+                output+="<input type='checkbox' name='opciones' value='" + datos[i].servicio  + "'  >";
+                output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + datos[i].servicio  + "</div></div></label></li>"
             }
 
 
@@ -78,6 +67,44 @@
         var app = this.$app;
         var router = this.$router;
 
+        var servicios ="";
+
+
+          var checkboxes = document.querySelectorAll('input[name=opciones]:checked');
+          if (checkboxes.length>0) {
+            servicios += checkboxes[0].value;
+          for (var i = 1; i < checkboxes.length; i++) {
+            servicios += ", " + checkboxes[i].value
+            }
+          }
+
+
+        datos ={};
+        datos.solicitud = servicios;
+        datos.cliente = "Rafael";
+        datos.emailC = "rafael.uribe@gmail.com";
+        datos.vendedor = "Paco";
+        datos.emailV = "paco@esd.mx";
+        datos.texto = "Gracias";
+
+        app.request({
+            url: 'https://us-central1-dvn-app.cloudfunctions.net/addMessage',
+            data: datos,
+            method: 'GET',
+            dataType: 'json',
+            success: function (datos) {
+              app.dialog.alert('Solicitud enviada', 'Gracias', function () {
+                        router.back();
+                    });
+            },
+            error: function (data) {
+              app.dialog.alert('Solicitud enviada', 'Gracias', function () {
+                        router.back();
+                    });
+            },
+          });
+
+        /*
         datos = {};
         datoEmail = 'submission['+campoEmail+']';
         datoSolcita = 'submission['+campoSolicita+']';
@@ -137,9 +164,8 @@
         },
         error: function (data) {alert("Error :" + data.responseText);},
         });
-
+        */
       }
-
     }
   }
 </script>
