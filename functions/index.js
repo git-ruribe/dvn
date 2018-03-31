@@ -8,6 +8,9 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
+const cors = require('cors')({
+  origin: true,
+});
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin');
@@ -55,9 +58,40 @@ exports.addMessage = functions.https.onRequest((req, res) => {
   const emailV = req.query.emailV;
   const texto = req.query.texto;
 
-  // Push the new message into the Realtime Database using the Firebase Admin SDK.
-  return admin.database().ref('/messages').push({solicitud:solicitud, cliente:cliente, emailC:emailC, vendedor:vendedor, emailV:emailV, texto:texto }).then((snapshot) => {
+ // Enable CORS using the `cors` express middleware.
 
+  // Push the new message into the Realtime Database using the Firebase Admin SDK.
+return admin.database().ref('/messages').push({solicitud:solicitud, cliente:cliente, emailC:emailC, vendedor:vendedor, emailV:emailV, texto:texto }).then((snapshot) => {
+  return cors(req, res, () => {
     return res.status(200).send("OK");
+    });
+  });
+});
+
+exports.addFavorite = functions.https.onRequest((req, res) => {
+  // Grab the text parameter.
+  const producto = req.query.producto;
+  const cliente = req.query.cliente;
+
+
+  // Push the new message into the Realtime Database using the Firebase Admin SDK.
+return admin.database().ref('/favoritos/'+cliente+'/'+producto).push(true).then((snapshot) => {
+  return cors(req, res, () => {
+    return res.status(204).end();
+    });
+  });
+});
+
+exports.delFavorite = functions.https.onRequest((req, res) => {
+  // Grab the text parameter.
+  const producto = req.query.producto;
+  const cliente = req.query.cliente;
+
+
+  // Push the new message into the Realtime Database using the Firebase Admin SDK.
+return admin.database().ref('/favoritos/'+cliente+'/'+producto).remove().then((snapshot) => {
+  return cors(req, res, () => {
+    return res.status(200).send("OK");
+    });
   });
 });

@@ -55,6 +55,7 @@ var local_user
 var cliente
 var vendedor
 var datos = {};
+var carrito = {};
 
 /*
 var array = [];
@@ -71,7 +72,71 @@ function escoge(myRadio) {
 }
 */
 
-function qqq(pelos) {
+function agregarcarrito(producto) {
+  console.log(producto + "x>" + cliente.codigo);
+  carrito[producto]='Si';
+  console.log(carrito);
+
+
+}
+
+function delFavorite(producto) {
+  console.log(producto + "x>" + cliente.codigo);
+
+  datos ={};
+  datos.producto = producto;
+  datos.cliente = cliente.codigo;
+
+  app.request({
+      url: 'https://us-central1-dvn-app.cloudfunctions.net/delFavorite',
+      data: datos,
+      method: 'GET',
+      dataType: 'json',
+      success: function (datos) {
+        app.dialog.alert('Borrado de Favoritos');
+        $('#productoF').html('');
+        $('#productoF').text('Borrado de Favoritos');
+      },
+      error: function (data) {
+        app.dialog.alert(data.responseText, 'Error');
+        $('#productoF').html('');
+        $('#productoF').text('Borrado de favoritos');
+      },
+    });
+
+}
+
+function addFavorite(producto) {
+  console.log(producto + "->" + cliente.codigo);
+
+  datos ={};
+  datos.producto = producto;
+  datos.cliente = cliente.codigo;
+
+  app.request({
+      url: 'https://us-central1-dvn-app.cloudfunctions.net/addFavorite',
+      data: datos,
+      method: 'GET',
+      dataType: 'json',
+      success: function (datos) {
+        app.dialog.alert('Agregado a favoritos');
+        $('#productoF').html('');
+        $('#productoF').text('En Favoritos');
+      },
+      error: function (data) {
+        app.dialog.alert(data.responseText, 'Error');
+        $('#productoF').html('');
+        $('#productoF').text('En Favoritos');
+      },
+    });
+
+}
+
+function ocultar() {
+  document.getElementById("productoX").style.visibility="hidden";
+}
+
+function seleccionaproducto(pelos) {
   division = document.getElementById("division").value;
   tipo = document.getElementById("tipo").value;
   especie = document.getElementById("especie").value;

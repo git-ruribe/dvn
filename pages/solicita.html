@@ -98,7 +98,7 @@
                     });
             },
             error: function (data) {
-              app.dialog.alert('Solicitud enviada', 'Gracias', function () {
+              app.dialog.alert(data.responseText, 'Error', function () {
                         router.back();
                     });
             },

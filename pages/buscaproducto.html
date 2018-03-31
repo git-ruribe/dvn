@@ -20,8 +20,8 @@
             <div class="item-inner">
               <div class="item-title item-label">Producto</div>
               <div class="item-input-wrap">
-                <input type="text" placeholder="Escriba para autocompletar" id="autocomplete-dropdown-ajax"/>
-                <span class="input-clear-button" onclick='qqq(this)'></span>
+                <input type="text" placeholder="Escriba para autocompletar" id="autocomplete-dropdown-ajax" onclick="seleccionaproducto(this)" onchange="ocultar()"/>
+                <span class="input-clear-button" ></span>
               </div>
             </div>
           </li>
@@ -59,7 +59,11 @@
           </li>
         </ul>
       </div>
-
+      <div id="productoX" class="card" style="visibility:hidden">
+        <div id="productoH" class="card-header">Card header</div>
+        <div id="productoT" class="card-content card-content-padding">Card with header and footer. Card headers are used to display card titles and footers for additional information or just for custom actions.</div>
+        <div id="productoF" class="card-footer">Card Footer</div>
+      </div>
     </div>
   </div>
 </template>
@@ -86,6 +90,22 @@
         var especie =['*'];
         var division =['*'];
         var cuantos = 0;
+        var favoritos = [];
+
+        if (cliente.codigo) {
+        var urlfavoritos = 'https://dvn-app.firebaseio.com/favoritos/' + cliente.codigo + '.json';
+        app.request({
+            url: urlfavoritos,
+            method: 'GET',
+            dataType: 'json',
+            //send "query" to server. Useful in case you generate response dynamically,
+            success: function (data) {
+              favoritos = data;
+              console.log(favoritos);
+            }
+          });
+        }
+
 
         app.request({
           url: 'https://dvn-app.firebaseio.com/productos.json',
@@ -149,6 +169,7 @@
                   }
                     $('#titulo').text("(" +cuantos + ")");
                     $('#autocomplete-dropdown-ajax').val("");
+                    ocultar();
 
                 }
               }
@@ -179,7 +200,7 @@
                   }
                     $('#titulo').text("(" +cuantos + ")");
                     $('#autocomplete-dropdown-ajax').val("");
-
+                    ocultar();
                 }
               }
             });
@@ -209,7 +230,7 @@
                   }
                     $('#titulo').text("(" +cuantos + ")");
                     $('#autocomplete-dropdown-ajax').val("");
-
+                    ocultar();
                 }
               }
             });
@@ -239,7 +260,7 @@
                   }
                     $('#titulo').text("(" +cuantos + ")");
                     $('#autocomplete-dropdown-ajax').val("");
-
+                    ocultar();
                 }
               }
             });
@@ -276,8 +297,9 @@
                 on: {
                   change: function () {
                     cuantos = 0;
+                    $('#productoX').attr('style','visibility:hidden');
                     for (var i = 0; i < datos.length; i++) {
-                      data[i].cuenta = 0;
+                      //data[i].cuenta = 0;
                       if ($('#autocomplete-dropdown-ajax').val()===datos[i].nombre) {
                         $('#division').val(datos[i].division);
                         pickerDevicedivision.value=datos[i].division;
@@ -287,8 +309,33 @@
                         pickerDeviceTipo.value=datos[i].tipo;
                         $('#marca').val(datos[i].marca);
                         pickerDeviceMarca.value=datos[i].marca;
-                        data[i].cuenta = 1;
+                        //data[i].cuenta = 1;
                         cuantos +=1;
+                        $('#productoH').text(datos[i].nombre);
+                        $('#productoT').html('');
+                        $('#productoT').html(datos[i].descripcion);
+                        $('#productoF').text(datos[i].codigo+"-"+cliente.codigo);
+                        favorito = 'no';
+                        for (j in Object.keys(favoritos)) {
+                          if (datos[i].codigo == Object.keys(favoritos)[j]) {
+                            favorito = 'si';
+                            var producto = datos[i].codigo;
+                            $('#productoF').html('');
+                            $('#productoF').text('');
+                            $('#productoF').html("<a onclick='delFavorite(\""+ producto + "\")'>Quitar de favoritos</a><a onclick='agregarcarrito(\""+ producto + "\")'>Agregar a carrito</a>");
+                            }
+                          }
+                          if (favorito == 'no')
+                          {
+                            var producto = datos[i].codigo;
+                            $('#productoF').html('');
+                            $('#productoF').text('');
+                            $('#productoF').html("<a onclick='addFavorite(\""+ producto + "\")'>Agregar a favoritos</a><a onclick='agregarcarrito(\""+ producto + "\")'>Agregar a carrito</a>");
+                          }
+
+
+                        $('#productoX').attr('style','visibility:visible');
+
                       }
                     }
                     $('#titulo').text("(" +cuantos + ")");
