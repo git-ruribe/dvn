@@ -47,6 +47,13 @@ var mainView = app.views.create('.view-main', {
   url: '/'
 })
 
+$(document).on('deviceready', function() {
+    console.log("Device is ready!");
+});
+
+var local_user
+var cliente
+var vendedor
 var datos = {};
 
 /*
@@ -85,7 +92,36 @@ function qqq(pelos) {
     document.getElementById("titulo").textContent="(" +cuantos + ")";
 }
 
+function deshabilitar() {
+  $('#solicitar').addClass('disabled');
+  $('#whats').addClass('disabled');
+}
 
+function habilitar() {
+  $('#solicitar').removeClass('disabled');
+  $('#whats').removeClass('disabled');
+}
+
+function traecliente(usuario) {
+  console.log('leyendo cliente');
+  app.request({
+    url: 'https://dvn-app.firebaseio.com/clientes.json',
+    method: 'GET',
+    dataType: 'json',
+    //send "query" to server. Useful in case you generate response dynamically,
+    success: function (data) {
+      for (var i in data) {
+        if (data[i].email == usuario) {
+          cliente = data[i];
+          break
+          }
+        }
+      console.log('cliente:'+cliente.nombre);
+      habilitar();
+      }
+    });
+
+}
 
 
 function initApp() {
@@ -105,9 +141,26 @@ function initApp() {
       }
     });
 
-    firebase.auth().onAuthStateChanged(function(user) {
+    local_user = window.localStorage.getItem('local_user');
 
+    if (local_user) {
+      console.log('local_user:' + local_user);
+      traecliente(local_user);
+      $('#iconios').removeClass('color-red');
+      $('#iconmd').removeClass('color-red');
+      $('#iconios').addClass('color-green');
+      $('#iconmd').addClass('color-green');
+      $('#signin').text('Salir');
+      $('#demo-password-1').val('');
+      $('#demo-username-1').val(local_user);
+    }
+
+    firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
+
+        console.log('user es verdadero');
+        // Guarda usuario en el dispositivo
+
         // User is signed in.
         var displayName = user.displayName;
         var email = user.email;
@@ -116,6 +169,12 @@ function initApp() {
         var isAnonymous = user.isAnonymous;
         var uid = user.uid;
         var providerData = user.providerData;
+
+        if (local_user!=email) {
+          window.localStorage.setItem('local_user', email);
+          local_user = email;
+          traecliente(local_user);
+        };
         // [START_EXCLUDE]
         $('#iconios').removeClass('color-red');
         $('#iconmd').removeClass('color-red');
@@ -123,19 +182,23 @@ function initApp() {
         $('#iconmd').addClass('color-green');
         $('#signin').text('Salir');
         $('#demo-password-1').val('');
+        $('#demo-username-1').val(local_user);
         if (!emailVerified) {
 
         }
         // [END_EXCLUDE]
       } else {
+        console.log('user es falso');
         // User is signed out.
         // [START_EXCLUDE]
+        if (!local_user) {
+        $('#demo-username-1').val('');
         $('#iconios').removeClass('color-green');
         $('#iconmd').removeClass('color-green');
         $('#iconios').addClass('color-red');
         $('#iconmd').addClass('color-red');
         $('#signin').text('Entrar');
-
+        }
         // [END_EXCLUDE]
       }
 

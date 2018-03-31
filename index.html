@@ -30,7 +30,7 @@
         authDomain: "dvn-app.firebaseapp.com",
         databaseURL: "https://dvn-app.firebaseio.com",
         projectId: "dvn-app",
-        storageBucket: "",
+        storageBucket: "dvn-app.appspot.com",
         messagingSenderId: "1043882827220"
       };
       firebase.initializeApp(config);
@@ -49,22 +49,37 @@
       <div class="panel panel-left panel-cover">
         <div class="page">
           <div class="page-content">
-            <div class="block-title">Clases</div>
+
+            <div class="block-title">Productos</div>
+            <div class="block">
             <div class="list links-list">
               <ul>
                 <li>
-                  <a href="/buscap/" class="panel-close">Productos</a>
+                  <a href="/buscap/" class="panel-close">Catalogo</a>
                 </li>
                 <li>
-                  <a href="/solicita/" class="panel-close">Solicitud</a>
-                </li>
-                <li>
-                  <a href="#" class="panel-close">Contacto</a>
+                  <a href="/buscap/" class="panel-close disabled">Favoritos</a>
                 </li>
               </ul>
             </div>
+          </div>
+
+            <div class="block-title">Servicios</div>
+            <div class="block">
+            <div class="list links-list">
+              <ul>
+                <li>
+                  <a id="solicitar"  href="/solicita/" class="panel-close disabled">Solicitud</a>
+                </li>
+                <li>
+                  <a id="whats" class="panel-close external disabled" onclick="whatsa()" >Whatsapp a vendedor</a>
+                </li>
+              </ul>
+            </div>
+          </div>
 
             <div class="block-title">Configuración</div>
+            <div class=" block">
             <div class="list links-list">
               <ul>
                 <li>
@@ -77,6 +92,11 @@
                   <a class="panel-close" href="/about/">About app</a>
                 </li>
               </ul>
+            </div>
+            </div>
+
+            <div class=" block">
+              Algunas opciones requieren ingresar con usuario.
             </div>
 
           </div>
@@ -97,7 +117,7 @@
                   <i class="icon material-icons md-only">menu</i>
                 </a>
               </div>
-              <div class="title">DVN 0.0.1</div>
+              <div class="title">DVN 0.0.2</div>
               <div class="right">
                 <a href="#" class="link icon-only login-screen-open" data-login-screen=".login-screen" >
                   <i id="iconios" class="icon f7-icons ios-only">person</i>
@@ -183,8 +203,13 @@
     <!--<script type="text/javascript" src="data/clientes.js"></script>
     <script type="text/javascript" src="data/productos.js"></script>-->
 
+    <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="my-app.js"></script>
     <script type="text/javascript">
+
+          function whatsa(){
+            var ref = cordova.InAppBrowser.open('https://api.whatsapp.com/send?phone=528110126237', '_system', 'location=yes');
+          };
 
           function sendPasswordReset() {
             var email = document.getElementById('demo-username-1').value;
@@ -211,6 +236,29 @@
           }
 
           function signIn() {
+
+            // si hay usuario local lo remueve y si hay usuario se sale
+            if (local_user) {
+              window.localStorage.removeItem('local_user');
+              local_user = null;
+              cliente = {};
+              console.log("local_user removido");
+              if (firebase.auth().currentUser) {
+                // [START signout]
+                document.getElementById('demo-username-1').value="";
+                document.getElementById('demo-password-1').value="";
+                firebase.auth().signOut();
+                // [END signout]
+              }
+              $('#demo-username-1').val('');
+              $('#iconios').removeClass('color-green');
+              $('#iconmd').removeClass('color-green');
+              $('#iconios').addClass('color-red');
+              $('#iconmd').addClass('color-red');
+              $('#signin').text('Entrar');
+              app.loginScreen.close();
+              return
+            }
 
             if (firebase.auth().currentUser) {
               // [START signout]
