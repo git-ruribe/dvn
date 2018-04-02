@@ -55,7 +55,13 @@ var local_user
 var cliente
 var vendedor
 var datos = {};
-var carrito = {};
+var temp = JSON.parse(window.localStorage.getItem('local_carrito'));
+
+if (temp) {
+  var carrito = temp;
+} else {
+  var carrito = {}
+}
 
 /*
 var array = [];
@@ -74,10 +80,49 @@ function escoge(myRadio) {
 
 function agregarcarrito(producto) {
   console.log(producto + "x>" + cliente.codigo);
-  carrito[producto]='Si';
-  console.log(carrito);
+  actual = carrito[producto];
+  var texto = "";
+  if (actual) { texto = 'Tienes en carrito: ' + actual + '\n'}
+
+      app.dialog.prompt( texto + ' ¿Cuántos deseas?', 'Cotización Actual', function (cuantos) {
+        if (cuantos>0){
+
+        carrito[producto] = cuantos;
+
+        datos ={};
+        datos.cliente = cliente.codigo;
+        datos.carrito = JSON.stringify(carrito);
+        window.localStorage.setItem('local_carrito', datos.carrito);
+
+        console.log(datos.carrito);
+
+        app.dialog.prompt( '¿Quieres finalizar y grabar?', 'Cotización Actual', function () {
+
+        app.request({
+            url: 'https://us-central1-dvn-app.cloudfunctions.net/addOrder',
+            data: datos,
+            method: 'GET',
+            dataType: 'json',
+            success: function (datos) {
+              app.dialog.alert('Pedido OK');
+              carrito = {};
+              window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+            },
+            error: function (data) {
+              app.dialog.alert(data.responseText, 'Pedido');
+              carrito = {};
+              window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+            },
+          });
+        });
 
 
+      } else {
+        delete carrito[producto];
+        window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+        console.log(JSON.stringify(carrito));
+      }
+      });
 }
 
 function delFavorite(producto) {
@@ -164,7 +209,27 @@ function deshabilitar() {
 
 function habilitar() {
   $('#solicitar').removeClass('disabled');
-  $('#whats').removeClass('disabled');
+
+}
+
+function traevendedor(cliente) {
+  console.log('leyendo vendedor');
+  app.request({
+    url: 'https://dvn-app.firebaseio.com/vendedores.json',
+    method: 'GET',
+    dataType: 'json',
+    //send "query" to server. Useful in case you generate response dynamically,
+    success: function (data) {
+      for (var i in data) {
+        if (data[i].nombre == cliente) {
+          vendedor = data[i];
+          break
+          }
+        }
+      console.log('vendedor:'+vendedor.nombre);
+      $('#whats').removeClass('disabled');
+      }
+    });
 }
 
 function traecliente(usuario) {
@@ -178,6 +243,7 @@ function traecliente(usuario) {
       for (var i in data) {
         if (data[i].email == usuario) {
           cliente = data[i];
+          traevendedor(cliente.vendedor)
           break
           }
         }
@@ -185,7 +251,6 @@ function traecliente(usuario) {
       habilitar();
       }
     });
-
 }
 
 
