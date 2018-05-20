@@ -39,6 +39,14 @@ var app = new Framework7({
       path: '/buscap/',
       componentUrl: './pages/buscaproducto.html',
     },
+    {
+      path: '/favoritos/',
+      componentUrl: './pages/favoritos.html',
+    },
+    {
+      path: '/cotiza/',
+      componentUrl: './pages/cotiza.html',
+    },
   ],
   // ... other parameters
 });

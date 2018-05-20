@@ -9,7 +9,12 @@
           </a>
         </div>
         <div class="title" >Productos<span class="subtitle" id="titulo">Subtitle</span></div>
-
+        <div class="right">
+          <a href="/cotiza/" class="link icon-only">
+            <i id="iconios" class="icon f7-icons ios-only">list<span class="badge color-blue">3</span></i>
+            <i id="iconmd" class="icon material-icons md-only">list<span class="badge color-black">3</span></i>
+          </a>
+        </div>
       </div>
     </div>
     <div class="page-content">
@@ -101,7 +106,6 @@
             //send "query" to server. Useful in case you generate response dynamically,
             success: function (data) {
               favoritos = data;
-              console.log(favoritos);
             }
           });
         }

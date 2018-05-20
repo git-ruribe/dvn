@@ -1,0 +1,76 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title" >Favoritos</div>
+
+      </div>
+    </div>
+    <div class="page-content">
+        <form>
+          <div class="list no-hairlines-md">
+
+                <ul>
+
+                   <div  id="textoX"></div>
+                   <li></li>
+
+                </ul>
+
+          </div>
+        </form>
+      <div id="productoX" class="card" style="visibility:hidden">
+        <div id="productoH" class="card-header">Card header</div>
+        <div id="productoT" class="card-content card-content-padding">Card with header and footer.</div>
+        <div id="productoF" class="card-footer">Card Footer</div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+return {
+  on: {
+    pageInit: function () {
+      var self = this;
+      var app = self.$app;
+      var $ = self.$;
+
+      var favoritos = [];
+
+      if (cliente.codigo) {
+        var urlfavoritos = 'https://dvn-app.firebaseio.com/favoritos/' + cliente.codigo + '.json';
+
+        app.request({
+            url: urlfavoritos,
+            method: 'GET',
+            dataType: 'json',
+            success: function (datos) {
+
+            favoritos = datos;
+            console.log(favoritos);
+
+            var output="";
+            for (j in Object.keys(favoritos))
+            {
+                output+="<li><label class='item-checkbox item-content'>";
+                output+="<input type='checkbox' name='opciones' value='" + Object.keys(favoritos)[j] + "'  >";
+                output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + Object.keys(favoritos)[j]  + "</div></div></label></li>"
+            }
+
+
+            $('#textoX').html(output);
+
+        },
+        error: function (data) {alert("Error :" + data.responseText);},
+        });
+      }
+    }
+  }
+}
+</script>
