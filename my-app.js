@@ -8,6 +8,8 @@ if (document.location.search.indexOf('theme=') >= 0) {
 }
 
 var app = new Framework7({
+
+  init: false,
   // App root element
   root: '#app',
   // App Name
@@ -62,6 +64,7 @@ $(document).on('deviceready', function() {
 var local_user
 var cliente
 var vendedor
+var productoOBJ = {};
 var datos = {};
 var temp = JSON.parse(window.localStorage.getItem('local_carrito'));
 
@@ -86,25 +89,57 @@ function escoge(myRadio) {
 }
 */
 
+function enviarcarrito() {
+  datos ={};
+  datos.cliente = cliente.codigo;
+  datos.carrito = JSON.stringify(carrito);
+
+
+  app.dialog.confirm( '¿Quieres cotizar estos productos?', 'Enviar', function () {
+
+  app.request({
+      url: 'https://us-central1-dvn-app.cloudfunctions.net/addOrder',
+      data: datos,
+      method: 'GET',
+      dataType: 'json',
+      success: function (datos) {
+        app.dialog.alert('Pedido OK');
+        carrito = {};
+        window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+      },
+      error: function (data) {
+        app.dialog.alert(data.responseText, 'Pedido');
+        carrito = {};
+        window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+      },
+    });
+
+});
+};
+
 function agregarcarrito(producto) {
   console.log(producto + "x>" + cliente.codigo);
   actual = carrito[producto];
+  linea = {};
   var texto = "";
   if (actual) { texto = 'Tienes en carrito: ' + actual + '\n'}
 
       app.dialog.prompt( texto + ' ¿Cuántos deseas?', 'Cotización Actual', function (cuantos) {
         if (cuantos>0){
-
-        carrito[producto] = cuantos;
+        linea.cantidad = cuantos;
+        linea.producto = productoOBJ;
+        carrito[producto] = linea;
 
         datos ={};
+        productoOBJ = {};
         datos.cliente = cliente.codigo;
         datos.carrito = JSON.stringify(carrito);
         window.localStorage.setItem('local_carrito', datos.carrito);
 
         console.log(datos.carrito);
+        $('#numCot1').text(Object.keys(carrito).length);
 
-        app.dialog.prompt( '¿Quieres finalizar y grabar?', 'Cotización Actual', function () {
+        /*app.dialog.prompt( '¿Quieres finalizar y grabar?', 'Cotización Actual', function () {
 
         app.request({
             url: 'https://us-central1-dvn-app.cloudfunctions.net/addOrder',
@@ -122,7 +157,7 @@ function agregarcarrito(producto) {
               window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
             },
           });
-        });
+        });*/
 
 
       } else {
@@ -344,4 +379,11 @@ function initApp() {
 
   }
 
-window.onload = initApp;
+//window.onload = initApp;
+
+//se hizo la inicialización de esta forma para que funcionara al inicio y en el back de dos niveles.
+$(document).on('page:init', '.page[data-name="home"]', function (e) {
+  initApp();
+})
+
+app.init();

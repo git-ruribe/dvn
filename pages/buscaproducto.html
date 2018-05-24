@@ -11,8 +11,8 @@
         <div class="title" >Productos<span class="subtitle" id="titulo">Subtitle</span></div>
         <div class="right">
           <a href="/cotiza/" class="link icon-only">
-            <i id="iconios" class="icon f7-icons ios-only">list<span class="badge color-blue">3</span></i>
-            <i id="iconmd" class="icon material-icons md-only">list<span class="badge color-black">3</span></i>
+            <i id="iconios" class="icon f7-icons ios-only">list<span id="numCot1" class="badge color-blue">x</span></i>
+            <i id="iconmd" class="icon material-icons md-only">list<span id="numCot2" class="badge color-black">x</span></i>
           </a>
         </div>
       </div>
@@ -96,6 +96,9 @@
         var division =['*'];
         var cuantos = 0;
         var favoritos = [];
+
+        console.log(carrito);
+        $('#numCot1').text(Object.keys(carrito).length);
 
         if (cliente.codigo) {
         var urlfavoritos = 'https://dvn-app.firebaseio.com/favoritos/' + cliente.codigo + '.json';
@@ -324,6 +327,7 @@
                           if (datos[i].codigo == Object.keys(favoritos)[j]) {
                             favorito = 'si';
                             var producto = datos[i].codigo;
+                            productoOBJ = datos[i];
                             $('#productoF').html('');
                             $('#productoF').text('');
                             $('#productoF').html("<a onclick='delFavorite(\""+ producto + "\")'>Quitar de favoritos</a><a onclick='agregarcarrito(\""+ producto + "\")'>Agregar a cotizador</a>");
@@ -332,6 +336,7 @@
                           if (favorito == 'no')
                           {
                             var producto = datos[i].codigo;
+                            productoOBJ = datos[i];
                             $('#productoF').html('');
                             $('#productoF').text('');
                             $('#productoF').html("<a onclick='addFavorite(\""+ producto + "\")'>Agregar a favoritos</a><a onclick='agregarcarrito(\""+ producto + "\")'>Agregar a cotizador</a>");

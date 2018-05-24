@@ -9,11 +9,10 @@
           </a>
         </div>
         <div class="title" >Cotización</div>
-
       </div>
     </div>
     <div class="page-content">
-        <form>
+
           <div class="list no-hairlines-md">
 
                 <ul>
@@ -23,8 +22,10 @@
 
                 </ul>
 
+                <button onclick='enviarcarrito()' class="button col button-round">Cotizar</button>
+
           </div>
-        </form>
+
       <div id="productoX" class="card" style="visibility:hidden">
         <div id="productoH" class="card-header">Card header</div>
         <div id="productoT" class="card-content card-content-padding">Card with header and footer.</div>
@@ -41,35 +42,15 @@ return {
       var app = self.$app;
       var $ = self.$;
 
-      var favoritos = [];
-
-      if (cliente.codigo) {
-        var urlfavoritos = 'https://dvn-app.firebaseio.com/favoritos/' + cliente.codigo + '.json';
-
-        app.request({
-            url: urlfavoritos,
-            method: 'GET',
-            dataType: 'json',
-            success: function (datos) {
-
-            favoritos = datos;
-            console.log(favoritos);
-
-            var output="";
-            for (j in Object.keys(favoritos))
-            {
-                output+="<li><label class='item-checkbox item-content'>";
-                output+="<input type='checkbox' name='opciones' value='" + Object.keys(favoritos)[j] + "'  >";
-                output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + Object.keys(favoritos)[j]  + "</div></div></label></li>"
-            }
-
-
-            $('#textoX').html(output);
-
-        },
-        error: function (data) {alert("Error :" + data.responseText);},
-        });
+      var output="";
+      for (j in Object.keys(carrito))
+      {
+          output+="<li><label class='item-checkbox item-content'>";
+          output+="<input type='checkbox' name='opciones' value='" + Object.keys(carrito)[j] + "'  >";
+          output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + carrito[Object.keys(carrito)[j]].producto.nombre  + "</div></div></label></li>"
       }
+      $('#textoX').html(output);
+
     }
   }
 }

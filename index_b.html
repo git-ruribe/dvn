@@ -37,6 +37,8 @@
       console.log("Firebase inicializado");
     </script>
 
+
+
   </head>
   <body>
     <!-- App root element -->
@@ -143,52 +145,53 @@
 
         </div>
 
-      </div>
-    </div>
-
-    <div class="login-screen">
-      <div class="page">
-        <div class="page-content login-screen-content">
-          <div class="login-screen-title">DVN</div>
-          <form>
-            <div class="list">
-              <ul>
-                <li class="item-content item-input">
-                  <div class="item-inner">
-                    <div class="item-title item-label">Email</div>
-                    <div class="item-input-wrap">
-                      <input type="text" name="username" id="demo-username-1" placeholder="Su email">
-                      <span class="input-clear-button"></span>
-                    </div>
-                  </div>
-                </li>
-                <li class="item-content item-input">
-                  <div class="item-inner">
-                    <div class="item-title item-label">Contraseña</div>
-                    <div class="item-input-wrap">
-                      <input type="password" name="password" id="demo-password-1" placeholder="Su contraseña">
-                      <span class="input-clear-button"></span>
-                    </div>
-                  </div>
-                </li>
-              </ul>
+        <div class="login-screen">
+          <div class="page">
+            <div class="page-content login-screen-content">
+              <div class="login-screen-title">DVN</div>
+              <form>
+                <div class="list">
+                  <ul>
+                    <li class="item-content item-input">
+                      <div class="item-inner">
+                        <div class="item-title item-label">Email</div>
+                        <div class="item-input-wrap">
+                          <input type="text" name="username" id="demo-username-1" placeholder="Su email">
+                          <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content item-input">
+                      <div class="item-inner">
+                        <div class="item-title item-label">Contraseña</div>
+                        <div class="item-input-wrap">
+                          <input type="password" name="password" id="demo-password-1" placeholder="Su contraseña">
+                          <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="list">
+                  <ul>
+                    <li><a id="signin" href="#" class="item-link list-button" onclick="signIn()">Entrar</a></li>
+                  </ul>
+                  <div class="block-footer">Usa tu cuenta para hacer solicitudes de estado de cuenta, contacto directo con tu vendedor y hacer pedidos.</div>
+                  <ul>
+                    <li><a id="regresar" href="#" class="item-link list-button login-screen-close">Regresar a app</a></li>
+                  </ul>
+                </div>
+                <br><br>
+                <div class="">
+                  Para recuperar su contraseña capture su correo electrónico y de click aqui -->
+                </div>
+                <a id="pwdreset" href="#" class="item-link list-button" onclick="sendPasswordReset()">Olvidé mi password.</a>
+              </form>
             </div>
-            <div class="list">
-              <ul>
-                <li><a id="signin" href="#" class="item-link list-button" onclick="signIn()">Entrar</a></li>
-              </ul>
-              <div class="block-footer">Usa tu cuenta para hacer solicitudes de estado de cuenta, contacto directo con tu vendedor y hacer pedidos.</div>
-              <ul>
-                <li><a id="regresar" href="#" class="item-link list-button login-screen-close">Regresar a app</a></li>
-              </ul>
-            </div>
-            <br><br>
-            <div class="">
-              Para recuperar su contraseña capture su correo electrónico y de click aqui -->
-            </div>
-            <a id="pwdreset" href="#" class="item-link list-button" onclick="sendPasswordReset()">Olvidé mi password.</a>
-          </form>
+          </div>
         </div>
+
+
       </div>
     </div>
 
@@ -199,9 +202,9 @@
     <!-- Path to your app js-->
     <!--<script type="text/javascript" src="data/clientes.js"></script>
     <script type="text/javascript" src="data/productos.js"></script>-->
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="my-app.js"></script>
-
     <script type="text/javascript">
 
           function whatsa(){
