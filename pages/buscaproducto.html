@@ -25,7 +25,7 @@
             <div class="item-inner">
               <div class="item-title item-label">Producto</div>
               <div class="item-input-wrap">
-                <input type="text" placeholder="Escriba para autocompletar" id="autocomplete-dropdown-ajax" onclick="seleccionaproducto(this)" onchange="ocultar()"/>
+                <input type="text" placeholder="Escriba para autocompletar" id="autocomplete-dropdown-ajax" onclick="clickDD()" onchange="cambioDD()"/>
                 <span class="input-clear-button" ></span>
               </div>
             </div>
@@ -97,7 +97,7 @@
         var cuantos = 0;
         var favoritos = [];
 
-        console.log(carrito);
+
         $('#numCot1').text(Object.keys(carrito).length);
 
         if (cliente.codigo) {
@@ -108,7 +108,8 @@
             dataType: 'json',
             //send "query" to server. Useful in case you generate response dynamically,
             success: function (data) {
-              favoritos = data;
+              if (data) {favoritos = data;}
+              else {favoritos = {};};
             }
           });
         }
@@ -162,7 +163,7 @@
               on: {
                 change: function () {
                   cuantos = 0;
-
+                  console.log("Cambio en División");
                   for (var i = 0; i < data.length; i++) {
                     data[i].cuenta = 0;
                     if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
@@ -193,7 +194,7 @@
               on: {
                 change: function () {
                   cuantos = 0;
-
+                  console.log("Cambio en Especie");
                   for (var i = 0; i < data.length; i++) {
                     data[i].cuenta = 0;
                     if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
@@ -223,7 +224,7 @@
               on: {
                 change: function () {
                   cuantos = 0;
-
+                  console.log("Cambio en Marca");
                   for (var i = 0; i < data.length; i++) {
                     data[i].cuenta = 0;
                     if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
@@ -253,7 +254,7 @@
               on: {
                 change: function () {
                   cuantos = 0;
-
+                  console.log("Cambio en Tipo");
                   for (var i = 0; i < data.length; i++) {
                     data[i].cuenta = 0;
                     if ( ((data[i].division == pickerDevicedivision.value) || (pickerDevicedivision.value=="*")  || (pickerDevicedivision.value==undefined)) &&
@@ -303,7 +304,8 @@
                 },
                 on: {
                   change: function () {
-                    cuantos = 0;
+                    //cuantos = 0; Quité de esta función el cambiar la cantidad de productos filtrados
+                    console.log("Cambio en Dropdown - buscar coincidencia exacta");
                     $('#productoX').attr('style','visibility:hidden');
                     for (var i = 0; i < datos.length; i++) {
                       //data[i].cuenta = 0;
@@ -317,7 +319,7 @@
                         $('#marca').val(datos[i].marca);
                         pickerDeviceMarca.value=datos[i].marca;
                         //data[i].cuenta = 1;
-                        cuantos +=1;
+                        //cuantos +=1;
                         $('#productoH').text(datos[i].nombre);
                         $('#productoT').html('');
                         $('#productoT').html(datos[i].descripcion);
@@ -342,12 +344,12 @@
                             $('#productoF').html("<a onclick='addFavorite(\""+ producto + "\")'>Agregar a favoritos</a><a onclick='agregarcarrito(\""+ producto + "\")'>Agregar a cotizador</a>");
                           }
 
-
+                        filtraproductos() ;
                         $('#productoX').attr('style','visibility:visible');
 
                       }
                     }
-                    $('#titulo').text("(" +cuantos + ")");
+                    //$('#titulo').text("(" +cuantos + ")");
                   }
                 }
             });

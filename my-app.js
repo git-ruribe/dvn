@@ -66,6 +66,7 @@ var cliente
 var vendedor
 var productoOBJ = {};
 var datos = {};
+var favoritos = {};
 var temp = JSON.parse(window.localStorage.getItem('local_carrito'));
 
 if (temp) {
@@ -89,6 +90,18 @@ function escoge(myRadio) {
 }
 */
 
+function fav(producto) {
+  var detalle = favoritos[producto][Object.keys(favoritos[producto])];
+  $('#productoH').text(detalle.nombre);
+  $('#productoT').html('');
+  $('#productoT').html(detalle.descripcion);
+  productoOBJ = detalle;
+  $('#productoF').html("<a onclick='favdelFavorite(\""+ producto + "\")'>Quitar de favoritos</a><a onclick='agregarcarrito(\""+ producto + "\")'>Agregar a cotizador</a>");
+
+  $('#productoX').attr('style','visibility:visible');
+
+}
+
 function enviarcarrito() {
   datos ={};
   datos.cliente = cliente.codigo;
@@ -103,28 +116,72 @@ function enviarcarrito() {
       method: 'GET',
       dataType: 'json',
       success: function (datos) {
-        app.dialog.alert('Pedido OK');
+        app.dialog.alert('Solictud enviada OK');
         carrito = {};
         window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+        mainView.router.back()
       },
-      error: function (data) {
-        app.dialog.alert(data.responseText, 'Pedido');
-        carrito = {};
-        window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+      error: function (xhr,status) {
+        // REVISAR ... si es error de a deveras no se debe borrar el carrito.
+        if (status=='parseerror') {status = 'Solictud enviada'}
+        app.dialog.alert(xhr.statusText, status, function () {
+                carrito = {};
+                window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+                mainView.router.back({
+                    url: '/buscap/',
+                    force: true,
+                    ignoreCache: true
+                });
+              });
       },
     });
 
 });
 };
 
+function pop(producto) {
+  var dialog = app.dialog.prompt('Cambiar cantidad o 0 para borrar',carrito[producto].producto.nombre, function (cuantos) {
+    if (cuantos>0){
+    carrito[producto].cantidad = cuantos;
+    datos.carrito = JSON.stringify(carrito);
+    window.localStorage.setItem('local_carrito', datos.carrito);
+    var output="";
+    for (j in Object.keys(carrito))
+    {
+        output+="<li><div class='item-content'>";
+        output+="<div class='item-inner' onclick='pop(\""+ Object.keys(carrito)[j] + "\")'>";
+        output+="<div class='item-title'>" + carrito[Object.keys(carrito)[j]].producto.nombre  + "</div>"
+        output+="<div class='item-after'>" + carrito[Object.keys(carrito)[j]].cantidad  + "</div>"
+        output+="</div></div></li> ";
+    }
+    $('#textoXX').html(output);
+  } else {
+    delete carrito[producto];
+    window.localStorage.setItem('local_carrito', JSON.stringify(carrito));
+    var output="";
+    for (j in Object.keys(carrito))
+    {
+        output+="<li><div class='item-content'>";
+        output+="<div class='item-inner' onclick='pop(\""+ Object.keys(carrito)[j] + "\")'>";
+        output+="<div class='item-title'>" + carrito[Object.keys(carrito)[j]].producto.nombre  + "</div>"
+        output+="<div class='item-after'>" + carrito[Object.keys(carrito)[j]].cantidad  + "</div>"
+        output+="</div></div></li> ";
+    }
+    $('#textoXX').html(output);
+  }
+  });
+  dialog.$el.find('input').val(carrito[producto].cantidad);
+
+}
+
 function agregarcarrito(producto) {
   console.log(producto + "x>" + cliente.codigo);
   actual = carrito[producto];
   linea = {};
   var texto = "";
-  if (actual) { texto = 'Tienes en carrito: ' + actual + '\n'}
+  if (actual) { texto = 'Tienes en carrito: ' + actual.cantidad + '\n'}
 
-      app.dialog.prompt( texto + ' ¿Cuántos deseas?', 'Cotización Actual', function (cuantos) {
+      var dialog = app.dialog.prompt( texto + ' ¿Cuántos deseas?', 'Cotización Actual', function (cuantos) {
         if (cuantos>0){
         linea.cantidad = cuantos;
         linea.producto = productoOBJ;
@@ -166,6 +223,70 @@ function agregarcarrito(producto) {
         console.log(JSON.stringify(carrito));
       }
       });
+
+      if (actual) { dialog.$el.find('input').val(actual.cantidad) }
+}
+
+function favdelFavorite(producto) {
+  console.log(producto + "x>" + cliente.codigo);
+
+  datos ={};
+  datos.producto = producto;
+  datos.cliente = cliente.codigo;
+
+  app.request({
+      url: 'https://us-central1-dvn-app.cloudfunctions.net/delFavorite',
+      data: datos,
+      method: 'GET',
+      dataType: 'json',
+      success: function (datos) {
+        app.dialog.alert('Borrado de Favoritos');
+        $('#productoF').html('');
+        $('#productoF').text('Borrado de Favoritos');
+      },
+      error: function (data) {
+        app.dialog.alert(data.responseText, 'Borrado de Favoritos');
+        $('#productoF').html('');
+        $('#productoF').text('Borrado de favoritos');
+      },
+    });
+
+    if (cliente.codigo) {
+      var urlfavoritos = 'https://dvn-app.firebaseio.com/favoritos/' + cliente.codigo + '.json';
+
+      app.request({
+          url: urlfavoritos,
+          method: 'GET',
+          dataType: 'json',
+          success: function (datos) {
+
+          favoritos = datos;
+          //console.log(favoritos);
+
+          var output="";
+          for (j in Object.keys(favoritos))
+          {
+            for (k in favoritos[Object.keys(favoritos)[j]]) {
+
+              output+="<li><div class='item-content'>";
+              //var str = JSON.stringify(favoritos[Object.keys(favoritos)[j]][k]);
+              //var texto = str.replace(/"/gi, '');
+              output+="<div class='item-inner' onclick='fav(\""+ favoritos[Object.keys(favoritos)[j]][k].codigo+"\")'>";
+              output+="<div class='item-title'>" + favoritos[Object.keys(favoritos)[j]][k].nombre  + "</div>"
+              output+="</div></div></li> ";
+
+            }
+          }
+
+
+          $('#textoX').html(output);
+
+      },
+      error: function (data) {alert("Error :" + data.responseText);},
+      });
+    }
+    $('#productoX').attr('style','visibility:hidden');
+
 }
 
 function delFavorite(producto) {
@@ -186,7 +307,7 @@ function delFavorite(producto) {
         $('#productoF').text('Borrado de Favoritos');
       },
       error: function (data) {
-        app.dialog.alert(data.responseText, 'Error');
+        app.dialog.alert(data.responseText, 'Borrado de Favoritos');
         $('#productoF').html('');
         $('#productoF').text('Borrado de favoritos');
       },
@@ -198,8 +319,9 @@ function addFavorite(producto) {
   console.log(producto + "->" + cliente.codigo);
 
   datos ={};
-  datos.producto = producto;
+  datos.detalle = JSON.stringify(productoOBJ);
   datos.cliente = cliente.codigo;
+  datos.producto = producto;
 
   app.request({
       url: 'https://us-central1-dvn-app.cloudfunctions.net/addFavorite',
@@ -212,7 +334,7 @@ function addFavorite(producto) {
         $('#productoF').text('En Favoritos');
       },
       error: function (data) {
-        app.dialog.alert(data.responseText, 'Error');
+        app.dialog.alert(data.responseText, 'Agregado a favoritos');
         $('#productoF').html('');
         $('#productoF').text('En Favoritos');
       },
@@ -220,11 +342,25 @@ function addFavorite(producto) {
 
 }
 
+function cambioDD() {
+  console.log("CambioDD");
+  filtraproductos();
+  ocultar();
+}
+
+function clickDD() {
+  console.log("ClickDD");
+  filtraproductos();
+  ocultar();
+}
+
 function ocultar() {
+  console.log("Ocultar");
   document.getElementById("productoX").style.visibility="hidden";
 }
 
-function seleccionaproducto(pelos) {
+function filtraproductos() {
+  console.log("Filtra productos");
   division = document.getElementById("division").value;
   tipo = document.getElementById("tipo").value;
   especie = document.getElementById("especie").value;

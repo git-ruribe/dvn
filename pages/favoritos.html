@@ -9,7 +9,12 @@
           </a>
         </div>
         <div class="title" >Favoritos</div>
-
+        <div class="right">
+          <a href="/cotiza/" class="link icon-only">
+            <i id="iconios" class="icon f7-icons ios-only">list<span id="numCot1" class="badge color-blue">x</span></i>
+            <i id="iconmd" class="icon material-icons md-only">list<span id="numCot2" class="badge color-black">x</span></i>
+          </a>
+        </div>
       </div>
     </div>
     <div class="page-content">
@@ -41,7 +46,7 @@ return {
       var app = self.$app;
       var $ = self.$;
 
-      var favoritos = [];
+      $('#numCot1').text(Object.keys(carrito).length);
 
       if (cliente.codigo) {
         var urlfavoritos = 'https://dvn-app.firebaseio.com/favoritos/' + cliente.codigo + '.json';
@@ -53,14 +58,21 @@ return {
             success: function (datos) {
 
             favoritos = datos;
-            console.log(favoritos);
+            //console.log(favoritos);
 
             var output="";
             for (j in Object.keys(favoritos))
             {
-                output+="<li><label class='item-checkbox item-content'>";
-                output+="<input type='checkbox' name='opciones' value='" + Object.keys(favoritos)[j] + "'  >";
-                output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + Object.keys(favoritos)[j]  + "</div></div></label></li>"
+              for (k in favoritos[Object.keys(favoritos)[j]]) {
+
+                output+="<li><div class='item-content'>";
+                //var str = JSON.stringify(favoritos[Object.keys(favoritos)[j]][k]);
+                //var texto = str.replace(/"/gi, '');
+                output+="<div class='item-inner' onclick='fav(\""+ favoritos[Object.keys(favoritos)[j]][k].codigo+"\")'>";
+                output+="<div class='item-title'>" + favoritos[Object.keys(favoritos)[j]][k].nombre  + "</div>"
+                output+="</div></div></li> ";
+
+              }
             }
 
 

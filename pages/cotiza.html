@@ -3,7 +3,7 @@
     <div class="navbar">
       <div class="navbar-inner sliding">
         <div class="left">
-          <a href="#" class="link back">
+          <a href="#" class="link back" data-ignore-cache="true" data-force="true" data-url="/buscap/">
             <i class="icon icon-back"></i>
             <span class="ios-only">Back</span>
           </a>
@@ -17,7 +17,7 @@
 
                 <ul>
 
-                   <div  id="textoX"></div>
+                   <div  id="textoXX"></div>
                    <li></li>
 
                 </ul>
@@ -45,11 +45,13 @@ return {
       var output="";
       for (j in Object.keys(carrito))
       {
-          output+="<li><label class='item-checkbox item-content'>";
-          output+="<input type='checkbox' name='opciones' value='" + Object.keys(carrito)[j] + "'  >";
-          output+="<i class='icon icon-checkbox'></i><div class='item-inner'><div class='item-title'>" + carrito[Object.keys(carrito)[j]].producto.nombre  + "</div></div></label></li>"
+          output+="<li><div class='item-content'>";
+          output+="<div class='item-inner' onclick='pop(\""+ Object.keys(carrito)[j] + "\")'>";
+          output+="<div class='item-title'>" + carrito[Object.keys(carrito)[j]].producto.nombre  + "</div>";
+          output+="<div class='item-after'>" + carrito[Object.keys(carrito)[j]].cantidad  + "</div>";
+          output+="</div></div></li> ";
       }
-      $('#textoX').html(output);
+      $('#textoXX').html(output);
 
     }
   }
