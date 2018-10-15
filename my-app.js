@@ -34,6 +34,10 @@ var app = new Framework7({
       url: './about.html',
     },
     {
+      path: '/libre/',
+      componentUrl: './pages/libre.html',
+    },
+    {
       path: '/solicita/',
       componentUrl: './pages/solicita.html',
     },
@@ -48,6 +52,10 @@ var app = new Framework7({
     {
       path: '/cotiza/',
       componentUrl: './pages/cotiza.html',
+    },
+    {
+      path: '/req_user/',
+      componentUrl: './pages/requestuser.html',
     },
   ],
   // ... other parameters
@@ -384,10 +392,18 @@ function filtraproductos() {
 function deshabilitar() {
   $('#solicitar').addClass('disabled');
   $('#whats').addClass('disabled');
+  $('#libre').addClass('disabled');
+  $('#catalogo').addClass('disabled');
+  $('#favoritos').addClass('disabled');
+  document.getElementById("warn").style.display="block";
 }
 
 function habilitar() {
   $('#solicitar').removeClass('disabled');
+  $('#libre').removeClass('disabled');
+  $('#catalogo').removeClass('disabled');
+  $('#favoritos').removeClass('disabled');
+  document.getElementById("warn").style.display="none";
 
 }
 
@@ -444,7 +460,7 @@ function initApp() {
       for (var i in data) {
         var j = Number(i) + 1;
         var pa='#promo' + j.toString();
-        $(pa).attr("style", "background-image:url(" + data[i].imagen + ")");
+        $(pa).attr("style", "background-image:url(" + data[i].imagen + "); background-size:contain; background-repeat:no-repeat; background-position: center; background-color:#f9f9f9 ");
         $(pa).html(data[i].html);
         }
       }

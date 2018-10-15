@@ -1,0 +1,88 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only"></span>
+          </a>
+        </div>
+        <div class="title">Pedido o Solicitud Abierta
+        </div>
+      </div>
+    </div>
+    <div class="page-content login-screen-content">
+      <form class="list" id="my-form">
+        <ul>
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Mensaje</div>
+                <div class="item-input-wrap">
+                  <textarea id="textarea" name="Solicitud" placeholder="Captura productos y cantidades o tu solicitud en texto libre." style="height:300px;"></textarea>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </form>
+      <div class="block block-strong row">
+        <div class="col"><a class="button convert-form-to-data" href="#" @click="graba">Enviar solicitud</a></div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+return {
+  on: {
+    pageInit: function () {
+      var self = this;
+      var app = self.$app;
+      var $ = self.$;
+
+
+
+    }
+  },
+  methods: {
+    graba: function () {
+      console.log("Grabando");
+      var $ = this.$;
+      var app = this.$app;
+      var router = this.$router;
+
+      var servicios ="";
+      var formData = app.form.convertToData('#my-form');
+
+      datos ={};
+      datos.solicitud = "Solicitud Libre";
+      datos.codigo = cliente.codigo;
+      datos.cliente = cliente.nombre;
+      datos.emailC = cliente.email;
+      datos.vendedor = cliente.vendedor;
+      datos.emailV = vendedor.email;
+      datos.texto = JSON.stringify(formData);
+
+      app.request({
+          url: 'https://us-central1-dvn-app.cloudfunctions.net/addMessage',
+          data: datos,
+          method: 'GET',
+          dataType: 'json',
+          success: function (datos) {
+            app.dialog.alert('Solicitud enviada', 'Gracias', function () {
+                      router.back();
+                  });
+          },
+          error: function (xhr,status) {
+            if (status=='parseerror') {status = 'Solictud Enviada'}
+            app.dialog.alert(xhr.statusText, status, function () {
+                      router.back();
+                  });
+          },
+        });
+
+    }
+  }
+}
+</script>

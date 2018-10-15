@@ -8,11 +8,11 @@
             <span class="ios-only">Back</span>
           </a>
         </div>
-        <div class="title" >Productos<span class="subtitle" id="titulo">Subtitle</span></div>
+        <div class="title" >Productos<span class="subtitle" id="titulo">Cargando productos ...</span></div>
         <div class="right">
           <a href="/cotiza/" class="link icon-only">
-            <i id="iconios" class="icon f7-icons ios-only">list<span id="numCot1" class="badge color-blue">x</span></i>
-            <i id="iconmd" class="icon material-icons md-only">list<span id="numCot2" class="badge color-black">x</span></i>
+            <i id="iconios" class="icon f7-icons ios-only">list<span id="numCot1" class="badge color-blue">-</span></i>
+            <i id="iconmd" class="icon material-icons md-only">list<span id="numCot2" class="badge color-black">-</span></i>
           </a>
         </div>
       </div>
@@ -25,7 +25,7 @@
             <div class="item-inner">
               <div class="item-title item-label">Producto</div>
               <div class="item-input-wrap">
-                <input type="text" placeholder="Escriba para autocompletar" id="autocomplete-dropdown-ajax" onclick="clickDD()" onchange="cambioDD()"/>
+                <input type="text" placeholder="Escriba para autocompletar" id="autocomplete-dropdown-ajax" onclick="clickDD()" onchange="cambioDD()" disabled/>
                 <span class="input-clear-button" ></span>
               </div>
             </div>
@@ -34,7 +34,7 @@
             <div class="item-inner">
               <div class="item-title item-label">División</div>
               <div class="item-input-wrap">
-                <input type="text" value="*" id="division" />
+                <input type="text" value="*" id="division" disabled/>
               </div>
             </div>
           </li>
@@ -42,7 +42,7 @@
             <div class="item-inner">
               <div class="item-title item-label">Especie</div>
               <div class="item-input-wrap">
-                <input type="text" value="*" id="especie"/>
+                <input type="text" value="*" id="especie" disabled/>
               </div>
             </div>
           </li>
@@ -50,7 +50,7 @@
             <div class="item-inner">
               <div class="item-title item-label">Tipo</div>
               <div class="item-input-wrap">
-                <input type="text" value="*" id="tipo"/>
+                <input type="text" value="*" id="tipo" disabled/>
               </div>
             </div>
           </li>
@@ -58,7 +58,7 @@
             <div class="item-inner">
               <div class="item-title item-label">Marca</div>
               <div class="item-input-wrap">
-                <input type="text" value="*" id="marca"/>
+                <input type="text" value="*" id="marca" disabled/>
               </div>
             </div>
           </li>
@@ -99,6 +99,7 @@
 
 
         $('#numCot1').text(Object.keys(carrito).length);
+        $('#numCot2').text(Object.keys(carrito).length);
 
         if (cliente.codigo) {
         var urlfavoritos = 'https://dvn-app.firebaseio.com/favoritos/' + cliente.codigo + '.json';
@@ -124,6 +125,14 @@
           datos = data;
           cuantos = data.length;
           $('#titulo').text("(" +cuantos + ")");
+
+          // AQUÍ DEBO HABILITAR LOS TEXT INPUTS
+
+          document.getElementById('autocomplete-dropdown-ajax').disabled = false;
+          document.getElementById('division').disabled = false;
+          document.getElementById('especie').disabled = false;
+          document.getElementById('tipo').disabled = false;
+          document.getElementById('marca').disabled = false;
 
           division_temp ={};
           especie_temp ={};

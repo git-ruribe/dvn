@@ -47,16 +47,16 @@
       <div class="panel panel-left panel-cover">
         <div class="page">
           <div class="page-content">
-
+            <div id="warn" class="block"> Para tener acceso a estas opciones debes ingresar con tu usuario al sistema. </div>
             <div class="block-title">Productos</div>
             <div class="block">
             <div class="list links-list">
               <ul>
                 <li>
-                  <a href="/buscap/" class="panel-close">Catalogo</a>
+                  <a id="catalogo" href="/buscap/" class="panel-close disabled">Catalogo</a>
                 </li>
                 <li>
-                  <a href="/favoritos/" class="panel-close">Favoritos</a>
+                  <a id="favoritos" href="/favoritos/" class="panel-close disabled">Favoritos</a>
                 </li>
               </ul>
             </div>
@@ -72,6 +72,9 @@
                 <li>
                   <a id="whats" class="panel-close external disabled" onclick="whatsa()" >Whatsapp a vendedor</a>
                 </li>
+                <li>
+                  <a id="libre"  href="/libre/" class="panel-close disabled">Pedido libre</a>
+                </li>
               </ul>
             </div>
           </div>
@@ -80,14 +83,16 @@
             <div class=" block">
             <div class="list links-list">
               <ul>
+                <!--
                 <li>
                   <a href="./index.html?theme=ios" class="external">iOS</a>
                 </li>
                 <li>
                   <a href="./index.html?theme=md" class="external">Android</a>
                 </li>
+                -->
                 <li>
-                  <a class="panel-close" href="/about/">About app</a>
+                  <a class="panel-close" href="/about/">Ayuda</a>
                 </li>
               </ul>
             </div>
@@ -115,7 +120,7 @@
                   <i class="icon material-icons md-only">menu</i>
                 </a>
               </div>
-              <div class="title">DVN 0.0.2</div>
+              <div class="title">DVN App</div>
               <div class="right">
                 <a href="#" class="link icon-only login-screen-open" data-login-screen=".login-screen" >
                   <i id="iconios" class="icon f7-icons ios-only">person</i>
@@ -148,8 +153,18 @@
 
     <div class="login-screen">
       <div class="page">
+        <div class="navbar">
+          <div class="navbar-inner sliding">
+            <div class="left">
+              <a href="#" class="link back login-screen-close">
+                <i class="icon icon-back"></i>
+                <span class="ios-only">Back</span>
+              </a>
+            </div>
+            <div class="title" >Usuario DVN</div>
+          </div>
+        </div>
         <div class="page-content login-screen-content">
-          <div class="login-screen-title">DVN</div>
           <form>
             <div class="list">
               <ul>
@@ -175,18 +190,21 @@
             </div>
             <div class="list">
               <ul>
-                <li><a id="signin" href="#" class="item-link list-button" onclick="signIn()">Entrar</a></li>
+                <li><a id="signin" href="#" class="item-link list-button" onclick="signIn()">Entrar (LogIn)</a></li>
               </ul>
-              <div class="block-footer">Usa tu cuenta para hacer solicitudes de estado de cuenta, contacto directo con tu vendedor y hacer pedidos.</div>
               <ul>
-                <li><a id="regresar" href="#" class="item-link list-button login-screen-close">Regresar a app</a></li>
+                <li></li>
+              </ul>
+              <div class="block-footer">Si no tienes usuario o requieres otro adicional, solicita uno :</div>
+              <ul>
+                <li><a id="solcitausuario" href="/req_user/" class="link list-button login-screen-close">Solicitar usuario</a></li>
+              </ul>
+              <div class="block-footer">Para recuperar su contraseña captura arriba tu correo electrónico y despues click aqui :</div>
+              <ul>
+                <li><a id="pwdreset" href="#" class="item-link list-button" onclick="sendPasswordReset()">Olvidé mi password.</a></li>
               </ul>
             </div>
             <br><br>
-            <div class="">
-              Para recuperar su contraseña capture su correo electrónico y de click aqui -->
-            </div>
-            <a id="pwdreset" href="#" class="item-link list-button" onclick="sendPasswordReset()">Olvidé mi password.</a>
           </form>
         </div>
       </div>
@@ -253,6 +271,7 @@
               $('#iconios').addClass('color-red');
               $('#iconmd').addClass('color-red');
               $('#signin').text('Entrar');
+              deshabilitar();
               app.loginScreen.close();
               return
             }
